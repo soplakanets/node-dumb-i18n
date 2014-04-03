@@ -6,6 +6,9 @@
   "scripts": {
     "test": "mocha -R spec"
   },
+  "engines": {
+    "node" : ">=0.10 <0.12"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/soplakanets/node-dumb-i18n.git"
