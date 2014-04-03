@@ -1,0 +1,14 @@
+{
+  "Hello": "Hello!",
+  "Hello, %s": "Hello, %s!",
+  "Hello, %s. Today is %s": "Hello, %s. Today is %s",
+  "Office days are %s, %s, %s, %s and %s": "Office days are %s, %s, %s, %s and %s",
+  "%s cats": {
+    "one": "%s cat",
+    "other": "%s cats"
+  },
+  "%s cats are at %s": {
+    "one": "%s cat is at %%s",
+    "other": "%s cats are at %%s"
+  }
+}

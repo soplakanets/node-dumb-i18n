@@ -1,4 +1,6 @@
 node-dumb-i18n
 ==============
 
-Simply localisation lib for node.js
+Simple internationalization library for node.js
+
+Heavily based on (i18n-node-2)[https://github.com/jeresig/i18n-node-2].
