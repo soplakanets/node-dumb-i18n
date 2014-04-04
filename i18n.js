@@ -20,6 +20,7 @@ var i18n = module.exports = function(opts) {
     directory: "./locales"
   };
 
+  // set options
   var self = this;
   _.each(defaults, function(v,k) {
     if (_.has(opts, k)) {
@@ -63,7 +64,7 @@ i18n.prototype = {
     return msg;
   },
 
-  __n: function(locale, string, count) {
+  __n: function(locale, string, count /*, variables... */) {
     var msg = this.translate(locale, string, true);
 
     msg = vsprintf(parseInt(count, 10) > 1 ? msg.other : msg.one, [count]);

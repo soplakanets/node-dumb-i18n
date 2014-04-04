@@ -17,21 +17,24 @@ describe('dumb-i18n', function() {
     assert.equal('Hello!', i18n.locale('ch').__('Hello'));
   });
 
-  it('should override default options', function() {
-    // TODO: Violating encapsulation here. Should I care?
+  it('should should override default locale if specified', function() {
+    i18n = new I18n({defaultLocale: 'es'});
+    i18n.loadLocale('es', localeFixture('es'));
 
-    assert.equal('en', i18n.defaultLocale);
-    assert.equal('.json', i18n.extension);
-    assert.equal('./locales', i18n.directory);
+    assert.equal('¡Hola!', i18n.locale('ch').__('Hello'));
+  });
 
-    var anotherI18n = new I18n({
-      defaultLocale: 'es',
-      extension: '.js',
-      directory: './strings'
-    });
-    assert.equal('es', anotherI18n.defaultLocale);
-    assert.equal('.js', anotherI18n.extension);
-    assert.equal('./strings', anotherI18n.directory);
+  it('should use `.json` as default extension', function() {
+    i18n.loadLocale('en', localeFixture('en'));
+
+    assert.equal('Hello!', i18n.locale('ch').__('Hello'));
+  });
+
+  it('should should override default extension', function() {
+    i18n = new I18n({extension: '.js', directory: path.join(__dirname, 'locales')});
+    i18n.loadFile('en');
+
+    assert.equal('Hello from locales/en.js', i18n.locale('en').__('Hello'));
   });
 
   it('should use provided string if locale not loaded', function() {
@@ -53,7 +56,7 @@ describe('dumb-i18n', function() {
       assert.equal('Hello!', i18n.locale('en').__('Hello'));
     });
 
-    it('should load multiple translations from object', function() {
+    it('should load multiple locales from objects', function() {
       i18n.loadLocale('en', localeFixture('en'));
       i18n.loadLocale('es', localeFixture('es'));
 
@@ -85,7 +88,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#locale(locale)', function() {
+  describe('#locale()', function() {
     it('should set locale', function() {
       assert.equal('en', i18n.locale('en').getLocale());
     });
@@ -95,7 +98,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#getLocale()', function() {
+  describe('locale()#getLocale()', function() {
     it('should return current locale', function() {
       assert.equal('en', i18n.locale('en').getLocale());
       assert.equal('es', i18n.locale('es').getLocale());
@@ -103,7 +106,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#__(string, params...)', function() {
+  describe('locale()#__()', function() {
     beforeEach(function() {
       i18n.loadLocale('en', localeFixture('en'));
     });
@@ -136,7 +139,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#__n(string, count, params...)', function() {
+  describe('locale()#__n()', function() {
     var T;
     beforeEach(function() {
       i18n.loadLocale('en', localeFixture('en'));
@@ -162,7 +165,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#bindTo(object)', function() {
+  describe('locale()#bindTo()', function() {
     it('should bind methods to specified object', function() {
       var obj = {};
       i18n.loadLocale('en', localeFixture('en'));
