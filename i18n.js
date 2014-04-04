@@ -39,33 +39,40 @@ i18n.prototype = {
     currentLocale = (currentLocale !== undefined) ? currentLocale : this.defaultLocale;
     var instance = this;
 
-    return {
-      __: function(/* string, variables... */) {
-        var msg = instance.translate(currentLocale, arguments[0]);
+      return {
+        __: instance.__.bind(instance, currentLocale),
+        __n: instance.__n.bind(instance, currentLocale),
+        getLocale: function() {
+          return currentLocale;
+        },
 
-        if (arguments.length > 1) {
-          msg = vsprintf(msg, Array.prototype.slice.call(arguments, 1));
+        bindTo: function(obj) {
+          obj['__'] = instance.__.bind(instance, currentLocale);
+          obj['__n'] = instance.__n.bind(instance, currentLocale);
         }
-
-        return msg;
-      },
-
-      __n: function(string, count) {
-        var msg = instance.translate(currentLocale, string, true);
-
-        msg = vsprintf(parseInt(count, 10) > 1 ? msg.other : msg.one, [count]);
-
-        if (arguments.length > 2) {
-          msg = vsprintf(msg, Array.prototype.slice.call(arguments, 2));
-        }
-
-        return msg;
-      },
-
-      getLocale: function() {
-        return currentLocale;
       }
+  },
+
+  __: function(locale, string /*, variables... */) {
+    var msg = this.translate(locale, string);
+
+    if (arguments.length > 2) {
+      msg = vsprintf(msg, Array.prototype.slice.call(arguments, 2));
     }
+
+    return msg;
+  },
+
+  __n: function(locale, string, count) {
+    var msg = this.translate(locale, string, true);
+
+    msg = vsprintf(parseInt(count, 10) > 1 ? msg.other : msg.one, [count]);
+
+    if (arguments.length > 3) {
+      msg = vsprintf(msg, Array.prototype.slice.call(arguments, 3));
+    }
+
+    return msg;
   },
 
   translate: function(locale, string, plural) {
@@ -75,7 +82,13 @@ i18n.prototype = {
       locale = this.defaultLocale;
     }
 
+    if (!this.localeLoaded(locale)) {
+      console.warn("WARN: Locale `" + locale + "` not loaded. Use #loadLocale() or #loadFile().");
+      this.locales[locale] = {};
+    }
+
     if (!this.locales[locale][string]) {
+      console.warn("WARN: Locale `" + locale + "` has no translation for string `" + string + "`");
       this.locales[locale][string] = plural ? { one: string, other: string } : string;
     }
 
@@ -99,5 +112,9 @@ i18n.prototype = {
     } else {
       console.warn("WARN: Locale " + locale + " was already initialized.");
     }
+  },
+
+  localeLoaded: function(locale) {
+    return _.has(this.locales, locale);
   }
 };

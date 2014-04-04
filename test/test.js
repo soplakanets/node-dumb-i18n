@@ -34,6 +34,18 @@ describe('dumb-i18n', function() {
     assert.equal('./strings', anotherI18n.directory);
   });
 
+  it('should use provided string if locale not loaded', function() {
+    i18n = new I18n();
+    assert.equal('Some string in not loaded locale en',
+      i18n.locale('en').__('Some string in not loaded locale %s', 'en'));
+
+    assert.equal('Some singular string in not loaded locale en',
+      i18n.locale('en').__n('Some singular string in not loaded locale %s', 'en', 1));
+
+    assert.equal('Some singular string in not loaded locale en',
+      i18n.locale('en').__n('Some singular string in not loaded locale %s', 'en', 2));
+  });
+
   describe('#loadLocale(locale, data)', function() {
     it('should load translations from object', function() {
       i18n.loadLocale('en', localeFixture('en'));
@@ -74,7 +86,7 @@ describe('dumb-i18n', function() {
   });
 
   describe('#locale(locale)', function() {
-    it('should set local', function() {
+    it('should set locale', function() {
       assert.equal('en', i18n.locale('en').getLocale());
     });
 
@@ -124,7 +136,7 @@ describe('dumb-i18n', function() {
     });
   });
 
-  describe('#__n(string, params...)', function() {
+  describe('#__n(string, count, params...)', function() {
     var T;
     beforeEach(function() {
       i18n.loadLocale('en', localeFixture('en'));
@@ -147,6 +159,17 @@ describe('dumb-i18n', function() {
     it('should use provided string if translation not found', function() {
       assert.equal('1 not existing string', T.__n('%s not existing string', 1));
       assert.equal('2 not existing string', T.__n('%s not existing string', 2));
+    });
+  });
+
+  describe('#bindTo(object)', function() {
+    it('should bind methods to specified object', function() {
+      var obj = {};
+      i18n.loadLocale('en', localeFixture('en'));
+      i18n.locale('en').bindTo(obj);
+
+      assert.equal("Hello!", obj.__('Hello'));
+      assert.equal("1 cat", obj.__n('%s cats', 1));
     });
   });
 });
