@@ -5,7 +5,7 @@
  *
  * @license http://opensource.org/licenses/MIT
  *
- * @version 0.1.0
+ * @version 0.2.0
  */
 var vsprintf  = require("sprintf").vsprintf,
     _         = require('lodash'),
@@ -32,7 +32,7 @@ var i18n = module.exports = function(opts) {
   this.locales = {};
 };
 
-i18n.version = "0.1.0";
+i18n.version = "0.2.0";
 
 i18n.prototype = {
   locale: function(currentLocale) {
